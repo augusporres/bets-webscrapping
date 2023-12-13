@@ -15,7 +15,7 @@ def scrap_links(url):
     driver.maximize_window()
     driver.get(url)
     time.sleep(2)
-    driver.switch_to.frame('sp_message_iframe_909366')
+    driver.switch_to.frame('sp_message_iframe_950597')
     time.sleep(2)
     # si navegador esta en ingles reemplazar feliz por happy
     # esto es para poder sacar el pop up de cookies y permitirte
@@ -24,21 +24,30 @@ def scrap_links(url):
     button.click()
     driver.switch_to.default_content()
     time.sleep(5)
+    # left_arrow_clicked = False
+    # left_arrow_button = driver.find_element(By.XPATH, "//button[contains(@class, 'header_previous__v_AQ7')")
     try:
-        buttons = driver.find_elements(By.XPATH, "//button[contains(@class, 'stage_stage__B6hjz') or contains(@class, 'stage_active__iN3az')]")
+        buttons = driver.find_elements(By.XPATH, "//button[contains(@class, 'stage_stage__DnLaS') or contains(@class, 'stage_active__7dnKz')]")
         for button in buttons:
             try:
+                # Wait for the button to be clickable (maximum 10 seconds)
+                WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, f"//button[contains(@class, 'stage_stage__DnLaS') or contains(@class, 'stage_active__7dnKz')]")))
+
+                # Scroll into view
+                #driver.execute_script("arguments[0].scrollIntoView();", button)
+
+                # Click the button
                 button.click()
             except Exception as click_exception:
                 print(f'Hubo un problema al clickear el elemento: {str(click_exception)}')
                 continue
             # time.sleep(2)
-            match_day_elements = driver.find_elements(By.XPATH, '//div[@class="match-day_match-day__OggOz"]')
+            match_day_elements = driver.find_elements(By.XPATH, '//div[@class="match-day_match-day__abKub"]')
             for match in match_day_elements:
                 # a_elements = match.find_elements(By.XPATH, 'a[@class="match_match__pP4PJ"]')
                 a_elements = match.find_elements(By.TAG_NAME, 'a')
                 for a in a_elements:
-                    endElement = a.find_element(By.XPATH, "//span[@class='match_score__gJkeW']")
+                    endElement = a.find_element(By.XPATH, "//span[@class='match_score__EI49F']")
                     links.append(a.get_attribute('href'))
     except ex.NoSuchElementException:
         print('--')
@@ -157,7 +166,7 @@ for link in filtered_links:
             new_row[col] = 0
     new_row = new_row[column_check]
     df = pd.concat([df,new_row], ignore_index=True)
-df.to_excel(r'C:\Users\augus\Desarrollo\Python\Nacho_apuestas\Resultados_v3.xlsx', index=False)
+df.to_excel(r'C:\Users\augus\Desarrollo\Python\bets-webscrapping\Resultados_v5.xlsx', index=False)
     
 print('Proceso finalizado')
 print(len(filtered_links))
